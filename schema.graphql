@@ -20,11 +20,6 @@ enum BalanceEventType {
   Slashed
 }
 
-enum BalanceStatus {
-  Free
-  Reserved
-}
-
 type BalanceTransaction implements TransactionBase @entity {
   id: ID!
   date: DateTime!
@@ -32,8 +27,26 @@ type BalanceTransaction implements TransactionBase @entity {
   blockNumber: Int!
   extrinisicHash: String
   success: Boolean!
-  accounts: [ID!]
-  amounts: [BigInt!]
-  status: BalanceStatus
+  data: BalanceData
   event: BalanceEventType
+}
+
+union BalanceData = TransferData | OtherBalanceData | SetBalanceData
+
+type TransferData {
+  from: ID!
+  to: ID!
+  amount: BigInt!
+  status: String
+}
+
+type SetBalanceData {
+  who: ID!
+  free: BigInt!
+  reserved: BigInt!
+}
+
+type OtherBalanceData {
+  account: ID!
+  amount: BigInt!
 }

@@ -1,17 +1,25 @@
 import * as events from "../types/events"
 
 import { BalanceEvent, handleBalanceEvent } from "./baseBalanceHandler"
+import { BalanceEventType, OtherBalanceData } from "../model"
 
-import { BalanceEventType } from "../model"
 import { EventHandlerContext } from "@subsquid/substrate-processor"
+import { encodeID } from "../helpers/common"
 
-function getEndowedEvent(ctx: EventHandlerContext): BalanceEvent {
+function getEndowedEvent(ctx: EventHandlerContext): OtherBalanceData {
     let event = new events.BalancesEndowedEvent(ctx)
     if (event.isV0) {
-        let [account, freeBalance] = event.asV0
-        return { accounts: [account], amounts: [freeBalance] }
+        let [account, amount] = event.asV0
+        return new OtherBalanceData({
+            account: encodeID(account),
+            amount: amount,
+        })
     } else {
-        return { accounts: [event.asLatest.account], amounts: [event.asLatest.freeBalance] }
+        let { account, freeBalance } = event.asLatest
+        return new OtherBalanceData({
+            account: encodeID(account),
+            amount: freeBalance,
+        })
     }
 }
 
