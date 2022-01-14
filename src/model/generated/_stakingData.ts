@@ -1,16 +1,15 @@
 import assert from "assert"
 import * as marshal from "./marshal"
 
-export class OtherBalanceData {
-  public readonly isTypeOf = 'OtherBalanceData'
+export class StakingData {
   private _account!: string
-  private _amount!: bigint
+  private _amount!: bigint | undefined | null
 
-  constructor(props?: Partial<Omit<OtherBalanceData, 'toJSON'>>, json?: any) {
+  constructor(props?: Partial<Omit<StakingData, 'toJSON'>>, json?: any) {
     Object.assign(this, props)
     if (json != null) {
       this._account = marshal.id.fromJSON(json.account)
-      this._amount = marshal.bigint.fromJSON(json.amount)
+      this._amount = json.amount == null ? undefined : marshal.bigint.fromJSON(json.amount)
     }
   }
 
@@ -23,20 +22,18 @@ export class OtherBalanceData {
     this._account = value
   }
 
-  get amount(): bigint {
-    assert(this._amount != null, 'uninitialized access')
+  get amount(): bigint | undefined | null {
     return this._amount
   }
 
-  set amount(value: bigint) {
+  set amount(value: bigint | undefined | null) {
     this._amount = value
   }
 
   toJSON(): object {
     return {
-      isTypeOf: this.isTypeOf,
       account: this.account,
-      amount: marshal.bigint.toJSON(this.amount),
+      amount: this.amount == null ? undefined : marshal.bigint.toJSON(this.amount),
     }
   }
 }

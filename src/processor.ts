@@ -1,7 +1,7 @@
-import * as balanceHandlers from "./handlers"
-import * as ss58 from "@subsquid/ss58"
+import * as balanceHandlers from "./handlers/balances"
+import * as stakingHandlers from "./handlers/staking"
 
-import { EventHandlerContext, Store, SubstrateProcessor } from "@subsquid/substrate-processor"
+import { Store, SubstrateProcessor } from "@subsquid/substrate-processor"
 
 const processor = new SubstrateProcessor('polkadot_balances')
 
@@ -27,6 +27,12 @@ processor.addEventHandler('balances.Deposit', balanceHandlers.handleDepositEvent
 processor.addEventHandler('balances.Withdraw', balanceHandlers.handleWithdrawEvent)
 processor.addEventHandler('balances.Slashed', balanceHandlers.handleSlashedEvent)
 
+processor.addEventHandler('staking.Rewarded', stakingHandlers.handleRewardedEvent)
+processor.addEventHandler('staking.Slashed', stakingHandlers.handleSlashedEvent)
+processor.addEventHandler('staking.Bonded', stakingHandlers.handleBondedEvent)
+processor.addEventHandler('staking.Unbonded', stakingHandlers.handleUnbondedEvent)
+processor.addEventHandler('staking.Withdrawn', stakingHandlers.handleWithdrawnEvent)
+processor.addEventHandler('staking.Chilled', stakingHandlers.handleChilledEvent)
 
 processor.run()
 

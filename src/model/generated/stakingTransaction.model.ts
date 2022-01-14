@@ -1,11 +1,11 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_} from "typeorm"
 import * as marshal from "./marshal"
-import {BalanceData} from "./_balanceData"
-import {BalanceEventType} from "./_balanceEventType"
+import {StakingData} from "./_stakingData"
+import {StakingEventType} from "./_stakingEventType"
 
 @Entity_()
-export class BalanceTransaction {
-  constructor(props?: Partial<BalanceTransaction>) {
+export class StakingTransaction {
+  constructor(props?: Partial<StakingTransaction>) {
     Object.assign(this, props)
   }
 
@@ -24,9 +24,9 @@ export class BalanceTransaction {
   @Column_("text", {nullable: true})
   extrinisicHash!: string | undefined | null
 
-  @Column_("jsonb", {transformer: {to: obj => obj == null ? undefined : obj.toJSON(), from: obj => obj == null ? undefined : new BalanceData(undefined, obj)}, nullable: true})
-  data!: BalanceData | undefined | null
+  @Column_("jsonb", {transformer: {to: obj => obj == null ? undefined : obj.toJSON(), from: obj => obj == null ? undefined : new StakingData(undefined, obj)}, nullable: true})
+  data!: StakingData | undefined | null
 
-  @Column_("varchar", {length: 18, nullable: true})
-  event!: BalanceEventType | undefined | null
+  @Column_("varchar", {length: 9, nullable: true})
+  event!: StakingEventType | undefined | null
 }

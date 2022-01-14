@@ -1,22 +1,22 @@
-import * as events from "../types/events"
+import * as events from "../../types/events"
 
-import { BalanceEvent, handleBalanceEvent } from "./baseBalanceHandler"
-import { BalanceEventType, OtherBalanceData } from "../model"
+import { BalanceData, BalanceEventType } from "../../model"
 
 import { EventHandlerContext } from "@subsquid/substrate-processor"
-import { encodeID } from "../helpers/common"
+import { encodeID } from "../../helpers/common"
+import { handleBalanceEvent } from "./baseHandler"
 
-function getUnreservedEvent(ctx: EventHandlerContext): BalanceEvent {
+function getUnreservedEvent(ctx: EventHandlerContext): BalanceData {
     let event = new events.BalancesUnreservedEvent(ctx)
     if (event.isV8) {
         let [who, amount] = event.asV8
-        return new OtherBalanceData({
+        return new BalanceData({
             account: encodeID(who),
             amount: amount,
         })
     } else {
         let { who, amount } = event.asLatest
-        return new OtherBalanceData({
+        return new BalanceData({
             account: encodeID(who),
             amount: amount,
         })

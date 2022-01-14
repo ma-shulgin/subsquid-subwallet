@@ -1,22 +1,22 @@
-import * as events from "../types/events"
+import * as events from "../../types/events"
 
-import { BalanceEvent, handleBalanceEvent } from "./baseBalanceHandler"
-import { BalanceEventType, OtherBalanceData } from "../model"
+import { BalanceData, BalanceEventType } from "../../model"
 
 import { EventHandlerContext } from "@subsquid/substrate-processor"
-import { encodeID } from "../helpers/common"
+import { encodeID } from "../../helpers/common"
+import { handleBalanceEvent } from "./baseHandler"
 
-function getSlashedEvent(ctx: EventHandlerContext): BalanceEvent {
+function getSlashedEvent(ctx: EventHandlerContext): BalanceData {
     let event = new events.BalancesSlashedEvent(ctx)
     if (event.isV9122) {
         let [who, amount] = event.asV9122
-        return new OtherBalanceData({
+        return new BalanceData({
             account: encodeID(who),
             amount: amount,
         })
     } else {
         let { who, amount } = event.asLatest
-        return new OtherBalanceData({
+        return new BalanceData({
             account: encodeID(who),
             amount: amount,
         })

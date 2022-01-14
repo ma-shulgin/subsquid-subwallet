@@ -1,24 +1,24 @@
-import * as events from "../types/events"
+import * as events from "../../types/events"
 
-import { BalanceEvent, handleBalanceEvent } from "./baseBalanceHandler"
-import { BalanceEventType, SetBalanceData } from "../model"
+import { BalanceData, BalanceEventType } from "../../model"
 
 import { EventHandlerContext } from "@subsquid/substrate-processor"
-import { encodeID } from "../helpers/common"
+import { encodeID } from "../../helpers/common"
+import { handleBalanceEvent } from "./baseHandler"
 
-function getBalanceSetEvent(ctx: EventHandlerContext): SetBalanceData {
+function getBalanceSetEvent(ctx: EventHandlerContext): BalanceData {
     let event = new events.BalancesBalanceSetEvent(ctx)
     if (event.isV0) {
         let [account, free, res] = event.asV0
-        return new SetBalanceData({
-            who: encodeID(account),
+        return new BalanceData({
+            account: encodeID(account),
             free: free,
             reserved: res
         })
     } else {
         let { who, free, reserved } = event.asLatest
-        return new SetBalanceData({
-            who: encodeID(who),
+        return new BalanceData({
+            account: encodeID(who),
             free: free,
             reserved: reserved
         })

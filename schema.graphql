@@ -1,11 +1,4 @@
-interface TransactionBase {
-  id: ID!
-  date: DateTime!
-  blockHash: String!
-  blockNumber: Int!
-  extrinisicHash: String
-  success: Boolean!
-}
+
 
 enum BalanceEventType {
   Endowed
@@ -20,33 +13,66 @@ enum BalanceEventType {
   Slashed
 }
 
+enum StakingEventType {
+  Rewarded
+  Slashed
+  Bonded
+  Unbonded
+  Withdrawn
+  Kicked
+  Chilled
+}
+
+interface TransactionBase {
+  id: ID!
+  date: DateTime!
+  blockHash: String!
+  blockNumber: Int!
+  extrinisicHash: String
+}
+
 type BalanceTransaction implements TransactionBase @entity {
   id: ID!
   date: DateTime!
   blockHash: String!
   blockNumber: Int!
   extrinisicHash: String
-  success: Boolean!
   data: BalanceData
   event: BalanceEventType
 }
 
-union BalanceData = TransferData | OtherBalanceData | SetBalanceData
-
-type TransferData {
-  from: ID!
-  to: ID!
-  amount: BigInt!
+type BalanceData {
+  from: ID
+  to: ID
+  account: ID
+  amount: BigInt
   status: String
+  free: BigInt
+  reserved: BigInt
 }
 
-type SetBalanceData {
-  who: ID!
-  free: BigInt!
-  reserved: BigInt!
+# type SetBalanceData {
+#   who: ID!
+#   free: BigInt!
+#   reserved: BigInt!
+# }
+
+# type MainBalanceData {
+#   account: ID!
+#   amount: BigInt!
+# }
+
+type StakingTransaction implements TransactionBase @entity {
+  id: ID!
+  date: DateTime!
+  blockHash: String!
+  blockNumber: Int!
+  extrinisicHash: String
+  data: StakingData
+  event: StakingEventType
 }
 
-type OtherBalanceData {
+type StakingData {
   account: ID!
-  amount: BigInt!
+  amount: BigInt
 }

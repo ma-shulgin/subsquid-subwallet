@@ -1,22 +1,22 @@
-import * as events from "../types/events"
+import * as events from "../../types/events"
 
-import { BalanceEvent, handleBalanceEvent } from "./baseBalanceHandler"
-import { BalanceEventType, OtherBalanceData } from "../model"
+import { BalanceData, BalanceEventType } from "../../model"
 
 import { EventHandlerContext } from "@subsquid/substrate-processor"
-import { encodeID } from "../helpers/common"
+import { encodeID } from "../../helpers/common"
+import { handleBalanceEvent } from "./baseHandler"
 
-function getDepositEvent(ctx: EventHandlerContext): OtherBalanceData {
+function getDepositEvent(ctx: EventHandlerContext): BalanceData {
     let event = new events.BalancesDepositEvent(ctx)
     if (event.isV0) {
         let [who, amount] = event.asV0
-        return new OtherBalanceData({
+        return new BalanceData({
             account: encodeID(who),
             amount: amount,
         })
     } else {
         let { who, amount } = event.asLatest
-        return new OtherBalanceData({
+        return new BalanceData({
             account: encodeID(who),
             amount: amount,
         })

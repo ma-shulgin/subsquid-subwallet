@@ -373,3 +373,208 @@ export class BalancesWithdrawEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 }
+
+export class StakingBondedEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'staking.Bonded')
+  }
+
+  /**
+   *  An account has bonded this amount.
+   * 
+   *  NOTE: This event is only emitted when funds are bonded via a dispatchable. Notably,
+   *  it will not be emitted for staking rewards when they are added to stake.
+   */
+  get isLatest(): boolean {
+    return this.ctx._chain.getEventHash('staking.Bonded') === '47facb114cad5e5d0612ab12cd27899aed054423f61b0ee4027c8d49284108a0'
+  }
+
+  /**
+   *  An account has bonded this amount.
+   * 
+   *  NOTE: This event is only emitted when funds are bonded via a dispatchable. Notably,
+   *  it will not be emitted for staking rewards when they are added to stake.
+   */
+  get asLatest(): [Uint8Array, bigint] {
+    assert(this.isLatest)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+}
+
+export class StakingChilledEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'staking.Chilled')
+  }
+
+  /**
+   *  An account has stopped participating as either a validator or nominator.
+   *  \[stash\]
+   */
+  get isLatest(): boolean {
+    return this.ctx._chain.getEventHash('staking.Chilled') === '277bfbb0f4821e3730eae77d40973d141b17f1d7aae8bb600de85ed5c0216e9f'
+  }
+
+  /**
+   *  An account has stopped participating as either a validator or nominator.
+   *  \[stash\]
+   */
+  get asLatest(): Uint8Array {
+    assert(this.isLatest)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+}
+
+export class StakingEraPaidEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'staking.EraPaid')
+  }
+
+  /**
+   *  The era payout has been set; the first balance is the validator-payout; the second is
+   *  the remainder from the maximum amount of reward.
+   *  \[era_index, validator_payout, remainder\]
+   */
+  get isLatest(): boolean {
+    return this.ctx._chain.getEventHash('staking.EraPaid') === '22f74c47ab34944f74004b6c3cb555af12518e637b6d8db16a901b18618e5933'
+  }
+
+  /**
+   *  The era payout has been set; the first balance is the validator-payout; the second is
+   *  the remainder from the maximum amount of reward.
+   *  \[era_index, validator_payout, remainder\]
+   */
+  get asLatest(): [number, bigint, bigint] {
+    assert(this.isLatest)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+}
+
+export class StakingKickedEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'staking.Kicked')
+  }
+
+  /**
+   *  A nominator has been kicked from a validator. \[nominator, stash\]
+   */
+  get isLatest(): boolean {
+    return this.ctx._chain.getEventHash('staking.Kicked') === 'b15e7348562872ef8dafa8cae20587e2ca3135c76ed98cdaf592440ad606c23a'
+  }
+
+  /**
+   *  A nominator has been kicked from a validator. \[nominator, stash\]
+   */
+  get asLatest(): [Uint8Array, Uint8Array] {
+    assert(this.isLatest)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+}
+
+export class StakingPayoutStartedEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'staking.PayoutStarted')
+  }
+
+  /**
+   *  The stakers' rewards are getting paid. \[era_index, validator_stash\]
+   */
+  get isLatest(): boolean {
+    return this.ctx._chain.getEventHash('staking.PayoutStarted') === 'fab307ca7bd42c66aab423faaa3fc048c24ed48a378aca6eea33d7408d1b0328'
+  }
+
+  /**
+   *  The stakers' rewards are getting paid. \[era_index, validator_stash\]
+   */
+  get asLatest(): [number, Uint8Array] {
+    assert(this.isLatest)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+}
+
+export class StakingRewardedEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'staking.Rewarded')
+  }
+
+  /**
+   *  The nominator has been rewarded by this amount. \[stash, amount\]
+   */
+  get isLatest(): boolean {
+    return this.ctx._chain.getEventHash('staking.Rewarded') === '0fb941f3870a0949228cdacebcebdb221028e93af89d7c2935bb73d066386b13'
+  }
+
+  /**
+   *  The nominator has been rewarded by this amount. \[stash, amount\]
+   */
+  get asLatest(): [Uint8Array, bigint] {
+    assert(this.isLatest)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+}
+
+export class StakingSlashedEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'staking.Slashed')
+  }
+
+  /**
+   *  One validator (and its nominators) has been slashed by the given amount.
+   *  \[validator, amount\]
+   */
+  get isLatest(): boolean {
+    return this.ctx._chain.getEventHash('staking.Slashed') === 'f6a852921cc26702b5320a65eeb483c7cd25e856e09e930a476eeb05dae41665'
+  }
+
+  /**
+   *  One validator (and its nominators) has been slashed by the given amount.
+   *  \[validator, amount\]
+   */
+  get asLatest(): [Uint8Array, bigint] {
+    assert(this.isLatest)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+}
+
+export class StakingUnbondedEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'staking.Unbonded')
+  }
+
+  /**
+   *  An account has unbonded this amount.
+   */
+  get isLatest(): boolean {
+    return this.ctx._chain.getEventHash('staking.Unbonded') === '285f3d8850d41cfb19105193c25afbd8f44056ce2ac4b135a1fa1607c5eb5f96'
+  }
+
+  /**
+   *  An account has unbonded this amount.
+   */
+  get asLatest(): [Uint8Array, bigint] {
+    assert(this.isLatest)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+}
+
+export class StakingWithdrawnEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'staking.Withdrawn')
+  }
+
+  /**
+   *  An account has called `withdraw_unbonded` and removed unbonding chunks worth `Balance`
+   *  from the unlocking queue.
+   */
+  get isLatest(): boolean {
+    return this.ctx._chain.getEventHash('staking.Withdrawn') === '7c8d62b0b7929c5620715729b1a4142fc288b28f3dcd67e9d58303a2bea399d3'
+  }
+
+  /**
+   *  An account has called `withdraw_unbonded` and removed unbonding chunks worth `Balance`
+   *  from the unlocking queue.
+   */
+  get asLatest(): [Uint8Array, bigint] {
+    assert(this.isLatest)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+}

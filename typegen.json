@@ -12,7 +12,16 @@
     "balances.ReserveRepatriated",
     "balances.Deposit",
     "balances.Withdraw",
-    "balances.Slashed"
+    "balances.Slashed",
+    "staking.EraPaid",
+    "staking.Rewarded",
+    "staking.Slashed",
+    "staking.Bonded",
+    "staking.Unbonded",
+    "staking.Withdrawn",
+    "staking.Kicked",
+    "staking.Chilled",
+    "staking.PayoutStarted"
   ],
   "calls": []
 }

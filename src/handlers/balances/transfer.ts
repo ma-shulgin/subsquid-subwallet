@@ -1,23 +1,23 @@
-import * as events from "../types/events"
+import * as events from "../../types/events"
 
-import { BalanceEvent, handleBalanceEvent } from "./baseBalanceHandler"
-import { BalanceEventType, TransferData } from "../model"
+import { BalanceData, BalanceEventType } from "../../model"
 
 import { EventHandlerContext } from "@subsquid/substrate-processor"
-import { encodeID } from "../helpers/common"
+import { encodeID } from "../../helpers/common"
+import { handleBalanceEvent } from "./baseHandler"
 
-function getTransferEvent(ctx: EventHandlerContext): TransferData {
+function getTransferEvent(ctx: EventHandlerContext): BalanceData {
     let event = new events.BalancesTransferEvent(ctx)
     if (event.isV0) {
         let [from, to, amount] = event.asV0
-        return new TransferData({
+        return new BalanceData({
             from: encodeID(from),
             to: encodeID(to),
             amount: amount
         })
     } else {
         let { from, to, amount } = event.asLatest
-        return new TransferData({
+        return new BalanceData({
             from: encodeID(from),
             to: encodeID(to),
             amount: amount
