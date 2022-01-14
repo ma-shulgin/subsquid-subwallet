@@ -1,80 +1,37 @@
+import * as balanceHandlers from "./handlers"
 import * as ss58 from "@subsquid/ss58"
-import {EventHandlerContext, Store, SubstrateProcessor} from "@subsquid/substrate-processor"
-import {Account, HistoricalBalance} from "./model"
-import {BalancesTransferEvent} from "./types/events"
+
+import { EventHandlerContext, Store, SubstrateProcessor } from "@subsquid/substrate-processor"
+
+const processor = new SubstrateProcessor('polkadot_balances')
 
 
-const processor = new SubstrateProcessor('kusama_balances')
-
-
-processor.setTypesBundle('kusama')
+processor.setTypesBundle('polkadot')
 processor.setBatchSize(500)
 
 
 processor.setDataSource({
-    archive: 'https://kusama.indexer.gc.subsquid.io/v4/graphql',
-    chain: 'wss://kusama-rpc.polkadot.io'
+    archive: 'https://polkadot.indexer.gc.subsquid.io/v4/graphql',
+    chain: 'wss://rpc.polkadot.io'
 })
 
 
-processor.addEventHandler('balances.Transfer', async ctx => {
-    let transfer = getTransferEvent(ctx)
-    let tip = ctx.extrinsic?.tip || 0n
-    let from = ss58.codec('kusama').encode(transfer.from)
-    let to = ss58.codec('kusama').encode(transfer.to)
-
-    let fromAcc = await getOrCreate(ctx.store, Account, from)
-    fromAcc.balance = fromAcc.balance || 0n
-    fromAcc.balance -= transfer.amount
-    fromAcc.balance -= tip
-    await ctx.store.save(fromAcc)
-
-    const toAcc = await getOrCreate(ctx.store, Account, to)
-    toAcc.balance = toAcc.balance || 0n
-    toAcc.balance += transfer.amount
-    await ctx.store.save(toAcc)
-
-    await ctx.store.save(new HistoricalBalance({
-        id: ctx.event.id + '-to',
-        account: fromAcc,
-        balance: fromAcc.balance,
-        date: new Date(ctx.block.timestamp)
-    }))
-
-    await ctx.store.save(new HistoricalBalance({
-        id: ctx.event.id + '-from',
-        account: toAcc,
-        balance: toAcc.balance,
-        date: new Date(ctx.block.timestamp)
-    }))
-})
+processor.addEventHandler('balances.Endowed', balanceHandlers.handleEndowedEvent)
+processor.addEventHandler('balances.DustLost', balanceHandlers.handleDustLostEvent)
+processor.addEventHandler('balances.Transfer', balanceHandlers.handleTransferEvent)
+processor.addEventHandler('balances.BalanceSet', balanceHandlers.handleBalanceSetEvent)
+processor.addEventHandler('balances.Reserved', balanceHandlers.handleReservedEvent)
+processor.addEventHandler('balances.Unreserved', balanceHandlers.handleUnreservedEvent)
+processor.addEventHandler('balances.ReserveRepatriated', balanceHandlers.handleReserveRepatriatedEvent)
+processor.addEventHandler('balances.Deposit', balanceHandlers.handleDepositEvent)
+processor.addEventHandler('balances.Withdraw', balanceHandlers.handleWithdrawEvent)
+processor.addEventHandler('balances.Slashed', balanceHandlers.handleSlashedEvent)
 
 
 processor.run()
 
 
-interface TransferEvent {
-    from: Uint8Array
-    to: Uint8Array
-    amount: bigint
-}
-
-
-function getTransferEvent(ctx: EventHandlerContext): TransferEvent {
-    let event = new BalancesTransferEvent(ctx)
-    if (event.isV1020) {
-        let [from, to, amount] = event.asV1020
-        return {from, to, amount}
-    } else if (event.isV1050) {
-        let [from, to, amount] = event.asV1050
-        return {from, to, amount}
-    } else {
-        return event.asLatest
-    }
-}
-
-
-async function getOrCreate<T extends {id: string}>(
+async function getOrCreate<T extends { id: string }>(
     store: Store,
     entityConstructor: EntityConstructor<T>,
     id: string
@@ -94,5 +51,5 @@ async function getOrCreate<T extends {id: string}>(
 
 
 type EntityConstructor<T> = {
-    new (...args: any[]): T
+    new(...args: any[]): T
 }

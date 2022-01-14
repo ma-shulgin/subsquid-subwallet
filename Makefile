@@ -1,4 +1,4 @@
-process: migrate
+process:
 	@node -r dotenv/config lib/processor.js
 
 

@@ -1,9 +1,18 @@
 {
   "outDir": "src/types",
-  "chainVersions": "kusamaVersions.json",
-  "typesBundle": "kusama",
+  "chainVersions": "polkadotVersions.json",
+  "typesBundle": "polkadot",
   "events": [
-    "balances.Transfer"
+    "balances.Endowed",
+    "balances.DustLost",
+    "balances.Transfer",
+    "balances.BalanceSet",
+    "balances.Reserved",
+    "balances.Unreserved",
+    "balances.ReserveRepatriated",
+    "balances.Deposit",
+    "balances.Withdraw",
+    "balances.Slashed"
   ],
   "calls": []
 }
