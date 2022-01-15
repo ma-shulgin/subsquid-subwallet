@@ -1,8 +1,8 @@
 {
-  "name": "kusama-balances",
+  "name": "subwallet",
   "private": true,
   "scripts": {
-    "build": "rd -rf lib && tsc",
+    "build": "rm -rf lib && tsc",
     "init": "node db/init.js",
     "proc-kusama-balances": "node lib/processor.js",
     "query-node": "squid-graphql-server"
