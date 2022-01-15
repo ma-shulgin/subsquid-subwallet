@@ -19,8 +19,6 @@ enum StakingEventType {
   Bonded
   Unbonded
   Withdrawn
-  Kicked
-  Chilled
 }
 
 interface TransactionBase {
